@@ -1797,7 +1797,7 @@ Qed.
 #[ local ]
 Lemma Hwhile_true : sem_Ind_while_true p ev Pc Pi_r.
 Proof.
-  move=> s0 s1 s2 s3 al c0 e c1 _ hc0 hseme _ hc1 _ hwhile.
+  move=> s0 s1 s2 s3 al c0 e ei c1 _ hc0 hseme _ hc1 _ hwhile.
   move=> ii hfv s0' hs00.
 
   have [hfv0 hfve hfv1] := disj_fvars_vars_I_Cwhile hfv.
@@ -1830,7 +1830,7 @@ Qed.
 #[ local ]
 Lemma Hwhile_false : sem_Ind_while_false p ev Pc Pi_r.
 Proof.
-  move=> s0 s1 al c0 e c1 _ hc0 hseme.
+  move=> s0 s1 al c0 e ei c1 _ hc0 hseme.
   move=> ii hfv s0' hs00.
 
   move: hfv => /disj_fvars_vars_I_Cwhile [hfv0 hfve _].

@@ -7,6 +7,12 @@
   parts of global addresses
   ([PR#921](https://github.com/jasmin-lang/jasmin/pull/921)).
 
+## Bug fixes
+
+- Correcting location of while in error reporting by introducing an i_loc linked to while condition
+  ([PR #969](https://github.com/jasmin-lang/jasmin/pull/969);
+  fixes [#902](https://github.com/jasmin-lang/jasmin/issues/902)).
+
 ## Other changes
 
 - The deprecated legacy interface to the LATEX pretty-printer has been removed
