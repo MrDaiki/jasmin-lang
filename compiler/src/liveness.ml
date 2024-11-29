@@ -52,7 +52,7 @@ and live_d weak d (s_o: Sv.t) =
 
   | Cfor _ -> assert false (* Should have been removed before *)
 
-  | Cwhile(a,c,e,c') ->
+  | Cwhile(a,c,e,loc,c') ->
     let ve = (vars_e e) in
     let rec loop s_o =
       (* loop (c; if e then c' else exit) *)
@@ -62,7 +62,7 @@ and live_d weak d (s_o: Sv.t) =
       if Sv.subset s_i' s_o then s_i, (c,c')
       else loop (Sv.union s_i' s_o) in
     let s_i, (c,c') = loop s_o in
-    s_i, s_o, Cwhile(a, c, e, c')
+    s_i, s_o, Cwhile(a, c, e,loc, c')
 
   | Ccall(xs,f,es) ->
     let s_i = Sv.union (vars_es es) (dep_lvs s_o xs) in
@@ -95,7 +95,7 @@ let iter_call_sites (cbf: L.i_loc -> funname -> lvals -> Sv.t * Sv.t -> unit)
   let rec iter_instr_r loc ii =
     function
     | (Cassgn _ | Copn _) -> ()
-    | (Cif (_, s1, s2) | Cwhile (_, s1, _, s2)) -> iter_stmt s1; iter_stmt s2
+    | (Cif (_, s1, s2) | Cwhile (_, s1, _,_, s2)) -> iter_stmt s1; iter_stmt s2
     | Cfor (_, _, s) -> iter_stmt s
     | Ccall (xs, fn, _) ->
        cbf loc fn xs ii
@@ -125,7 +125,7 @@ let rec conflicts_i cf i =
     merge_class cf s2
   | Cfor( _, _, c) ->
     conflicts_c (merge_class cf s2) c
-  | Cif(_, c1, c2) | Cwhile(_, c1, _, c2) ->
+  | Cif(_, c1, c2) | Cwhile(_, c1, _,_, c2) ->
     conflicts_c (conflicts_c (merge_class cf s2) c1) c2
 and conflicts_c cf c =
   List.fold_left conflicts_i cf c

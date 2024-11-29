@@ -91,8 +91,8 @@ end = struct
       Cfor (mk_v_loc fn v, mk_range fn r, mk_stmt fn st)
     | Ccall (lvs, c_fn, es) ->
       Ccall (mk_lvals fn lvs, c_fn, mk_exprs fn es)
-    | Cwhile (a, st1, e, st2) ->
-      Cwhile (a, mk_stmt fn st1, mk_expr fn e, mk_stmt fn st2)
+    | Cwhile (a, st1, e,loc, st2) ->
+      Cwhile (a, mk_stmt fn st1, mk_expr fn e,loc, mk_stmt fn st2)
 
   and mk_stmt fn instrs = List.map (mk_instr fn) instrs
 
@@ -338,7 +338,7 @@ end = struct
     | Cfor (_, _, c) ->
       pa_flag_setfrom v (List.rev c)
 
-    | Cwhile (_, c1, _, c2) ->
+    | Cwhile (_, c1,_,_, c2) ->
       pa_flag_setfrom v (List.rev_append c1 (List.rev c2))
         
     | Ccall (lvs, _, _) | Csyscall(lvs, _, _) ->
@@ -367,13 +367,13 @@ end = struct
       (* We ignore the loop index, since we do not use widening for loops. *)
       pa_stmt fn prog st c
 
-    | Cwhile (_, c1, _, c2) when has_annot "bounded" instr ->
+    | Cwhile (_, c1, _,_,c2) when has_annot "bounded" instr ->
       (* Ignore the loop condition, as this loop will be fully unrolled at analysis time. *)
       let st = pa_stmt fn prog st c1 in
       let st = pa_stmt fn prog st c2 in
       st
 
-    | Cwhile (_, c1, b, c2) ->
+    | Cwhile (_, c1, b,_, c2) ->
       let vs,st = expr_vars st b in
 
       let st' =
@@ -503,7 +503,7 @@ end = struct
       
   let rec collect_vars_i sv i = match i.i_desc with
     | Cif (e, st1, st2)
-    | Cwhile (_,st1,e,st2) ->
+    | Cwhile (_,st1,e,_,st2) ->
       let sv = collect_vars_is sv st1 in
       let sv = collect_vars_is sv st2 in
       collect_vars_e sv e

@@ -34,7 +34,7 @@ let rec warn_extra_i pd asmOp i =
             (Printer.pp_instr ~debug:false pd asmOp)
             i
       | _ -> ())
-  | Cif (_, c1, c2) | Cwhile (_, c1, _, c2) ->
+  | Cif (_, c1, c2) | Cwhile (_, c1, _,_, c2) ->
       List.iter (warn_extra_i pd asmOp) c1;
       List.iter (warn_extra_i pd asmOp) c2
   | Cfor _ ->
