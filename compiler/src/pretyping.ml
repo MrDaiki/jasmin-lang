@@ -1945,7 +1945,7 @@ let rec tt_instr arch_info (env : 'asm Env.env) ((annot,pi) : S.pinstr) : 'asm E
       let a = 
         Option.map_default (fun () -> E.Align) E.NoAlign (Annot.ensure_uniq1 "align" Annot.none annot) in
       let annot = Annot.consume "align" annot in
-      env, [mk_i ~annot (P.Cwhile (a, s1, c,(L.of_loc e), s2))]
+      env, [mk_i ~annot (P.Cwhile (a, s1, c,((L.of_loc e,[]),()), s2))]
 
 (* -------------------------------------------------------------------- *)
 and tt_block arch_info env (pb : S.pblock) =

@@ -168,8 +168,8 @@ and cinstr_r_of_instr_r p i =
     let c = cstmt_of_stmt c in
     let ir = C.Cfor(x,d,c) in
     C.MkI(p, ir)
-  | Cwhile(a, c, e,loc, c') ->
-    let ir = C.Cwhile(a, cstmt_of_stmt c, cexpr_of_expr e,loc,
+  | Cwhile(a, c, e, (info,_), c') ->
+    let ir = C.Cwhile(a, cstmt_of_stmt c, cexpr_of_expr e, info,
                       cstmt_of_stmt c') in
     C.MkI(p,ir)
   | Ccall(x, f, e) ->
@@ -207,8 +207,8 @@ and instr_r_of_cinstr_r = function
     let c = stmt_of_cstmt c in
     Cfor(x,d,c)
 
-  | Cwhile(a, c, e,loc, c') ->
-    Cwhile(a, stmt_of_cstmt c, expr_of_cexpr e,loc , stmt_of_cstmt c')
+  | Cwhile(a, c, e, info, c') ->
+    Cwhile(a, stmt_of_cstmt c, expr_of_cexpr e, (info,()), stmt_of_cstmt c')
 
   | Ccall(x, f, e) ->
     Ccall(lval_of_clvals x, f, expr_of_cexprs e)

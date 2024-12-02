@@ -99,7 +99,7 @@ type ('len,'info,'asm) ginstr_r =
   | Csyscall of 'len glvals * BinNums.positive Syscall_t.syscall_t * 'len gexprs
   | Cif    of 'len gexpr * ('len,'info,'asm) gstmt * ('len,'info,'asm) gstmt
   | Cfor   of 'len gvar_i * 'len grange * ('len,'info,'asm) gstmt
-  | Cwhile of E.align * ('len,'info,'asm) gstmt * 'len gexpr * L.i_loc * ('len,'info,'asm) gstmt
+  | Cwhile of E.align * ('len,'info,'asm) gstmt * 'len gexpr * (IInfo.t * 'info) * ('len,'info,'asm) gstmt
   | Ccall  of 'len glvals * funname * 'len gexprs
 
 and ('len,'info,'asm) ginstr = {
@@ -318,8 +318,8 @@ let rec refresh_i_loc_i (i:('info,'asm) instr) : ('info,'asm) instr =
         Cif(e, refresh_i_loc_c c1, refresh_i_loc_c c2)
     | Cfor(x, r, c) ->
         Cfor(x, r, refresh_i_loc_c c)
-    | Cwhile(a, c1, e,loc, c2) ->
-        Cwhile(a, refresh_i_loc_c c1, e, L.refresh_i_loc loc, refresh_i_loc_c c2)
+    | Cwhile(a, c1, e,((loc,annot),info), c2) ->
+        Cwhile(a, refresh_i_loc_c c1, e, ((L.refresh_i_loc loc,annot),info), refresh_i_loc_c c2)
   in
   { i with i_desc; i_loc = L.refresh_i_loc i.i_loc }
 

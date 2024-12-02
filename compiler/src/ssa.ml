@@ -88,7 +88,7 @@ let split_live_ranges (allvars: bool) (f: ('info, 'asm) func) : (unit, 'asm) fun
           ) os (m, [], [])
       in
       m, Cif (e, s1 @ tl1, s2 @ tl2)
-    | Cwhile (a, s1, e,loc, s2) ->
+    | Cwhile (a, s1, e,(info,_), s2) ->
       let os = written_vars_stmt allvars (written_vars_stmt allvars Sv.empty s1) s2 in
       let m1, s1 = stmt m s1 in
       let e = rename_expr m1 e in
@@ -100,7 +100,7 @@ let split_live_ranges (allvars: bool) (f: ('info, 'asm) func) : (unit, 'asm) fun
             else tl2
           ) os []
       in
-      m1, Cwhile (a, s1, e,loc, s2 @ tl2)
+      m1, Cwhile (a, s1, e,(info,()), s2 @ tl2)
   and instr (m, tl) i =
     let { i_desc ; i_info = (li, lo) ; i_loc ; _ } = i in
     let m, i_desc = instr_r i_loc li lo m i_desc in

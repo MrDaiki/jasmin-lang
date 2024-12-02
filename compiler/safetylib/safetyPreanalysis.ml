@@ -26,6 +26,8 @@ end = struct
 
   let htv = Hashtbl.create ~random:false 16
 
+  let mk_info () = { i_instr_number = uniq_i_nb ();}
+
   let rec mk_gv v = v ^ "##g"
 
   and mk_glob fn ((x,value) : global_decl) = (mk_v fn x, value)
@@ -75,7 +77,7 @@ end = struct
   and mk_instr fn st = {
       st with
       i_desc = mk_instr_r fn st.i_desc;
-      i_info = { i_instr_number = uniq_i_nb ();};
+      i_info = mk_info ();
     }
 
   and mk_instr_r fn st = match st with
@@ -91,8 +93,8 @@ end = struct
       Cfor (mk_v_loc fn v, mk_range fn r, mk_stmt fn st)
     | Ccall (lvs, c_fn, es) ->
       Ccall (mk_lvals fn lvs, c_fn, mk_exprs fn es)
-    | Cwhile (a, st1, e,loc, st2) ->
-      Cwhile (a, mk_stmt fn st1, mk_expr fn e,loc, mk_stmt fn st2)
+    | Cwhile (a, st1, e,(info,_), st2) ->
+      Cwhile (a, mk_stmt fn st1, mk_expr fn e,(info,mk_info ()), mk_stmt fn st2)
 
   and mk_stmt fn instrs = List.map (mk_instr fn) instrs
 

@@ -52,7 +52,7 @@ and live_d weak d (s_o: Sv.t) =
 
   | Cfor _ -> assert false (* Should have been removed before *)
 
-  | Cwhile(a,c,e,loc,c') ->
+  | Cwhile(a,c,e,(info,_),c') ->
     let ve = (vars_e e) in
     let rec loop s_o =
       (* loop (c; if e then c' else exit) *)
@@ -62,7 +62,7 @@ and live_d weak d (s_o: Sv.t) =
       if Sv.subset s_i' s_o then s_i, (c,c')
       else loop (Sv.union s_i' s_o) in
     let s_i, (c,c') = loop s_o in
-    s_i, s_o, Cwhile(a, c, e,loc, c')
+    s_i, s_o, Cwhile(a, c, e,(info,(s_i, s_o)), c')
 
   | Ccall(xs,f,es) ->
     let s_i = Sv.union (vars_es es) (dep_lvs s_o xs) in
