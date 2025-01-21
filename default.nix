@@ -65,6 +65,7 @@ stdenv.mkDerivation {
          cmdliner
          angstrom
          batteries
+         logs
          menhir (oP.menhirLib or null) zarith camlidl apron yojson ]))
     ++ optionals devTools (with oP; [ merlin ocaml-lsp ])
     ++ optionals ecDeps [ easycrypt alt-ergo.bin z3.out ]

@@ -1,5 +1,9 @@
 (lang dune 2.9)
+
 (name jasmin)
+
 (license MIT)
+
 (authors "The Jasmin development team")
+
 (using menhir 2.1)
